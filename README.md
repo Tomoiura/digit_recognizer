@@ -63,3 +63,15 @@ digit_recognizer/
 └── output/
     └── index.html       # 生成された単一HTMLアプリ
 ```
+
+## フィードバック
+
+技術的な誤りや説明の改善点があれば、Issue や Pull Request を歓迎します。
+
+## 作者
+
+Tomohisa Iura ([@Tomoiura](https://github.com/Tomoiura)) — tomo@kanadeki.jp
+
+## ライセンス
+
+MIT License - 詳細は [LICENSE](LICENSE) を参照してください。
