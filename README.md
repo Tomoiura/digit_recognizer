@@ -1,5 +1,7 @@
 # 手書き数字認識 AI
 
+**[デモを試す](https://tomoiura.github.io/digit_recognizer/)**
+
 ![screenshot](docs/screenshot.png)
 
 指またはマウスで数字を描くと、ニューラルネットワークがリアルタイムで認識します。
