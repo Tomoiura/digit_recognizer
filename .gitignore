@@ -1,0 +1,5 @@
+data/
+weights_cache.npz
+__pycache__/
+*.pyc
+.DS_Store
