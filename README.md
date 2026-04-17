@@ -1,77 +1,78 @@
-# 手書き数字認識 AI
+> 🇯🇵 [日本語版はこちら](README_ja.md)
 
-**[デモを試す](https://tomoiura.github.io/digit_recognizer/)**
+# Handwritten Digit Recognition AI
 
-![screenshot](docs/screenshot.png)
+**[Try the Demo](https://tomoiura.github.io/digit_recognizer/)**
 
-指またはマウスで数字を描くと、ニューラルネットワークがリアルタイムで認識します。
-同時に、ネットワーク内部の信号の流れがリアルタイムに可視化されます。
+![screenshot](docs/screenshot_en.png)
 
-## 特徴
+Draw a digit with your finger or mouse — the neural network recognizes it in real time.
+Watch the signal flow through the network layers in real time.
 
-- **リアルタイム推論** — 描画中にストロークごとにCNNが推論を実行
-- **ダイヤル型ヒートマップ** — 0〜9の確信度が色の濃さでリアルタイムに変化
-- **ネットワーク図** — Input → Conv1 → Conv2 → FC → Output のノードとリンクが信号の強さに応じて光る
-- **CNNの入力プレビュー** — 描いた文字が28×28にどう縮小されるか確認できる
-- **左右入替** — 左利き/右利きに対応
+## Features
 
-## モデル
+- **Real-time inference** — the CNN runs inference on every stroke as you draw
+- **Dial-style heatmap** — confidence for digits 0–9 shown as color intensity, updating in real time
+- **Network diagram** — Input → Conv1 → Conv2 → FC → Output nodes and links light up based on signal strength
+- **CNN input preview** — see how your drawing is downscaled to 28×28 pixels
+- **Left/right swap** — supports both left-handed and right-handed users
 
-小さいながらも27,690パラメータ（GPT-4の6,500万分の1）を持つ本物のニューラルネットワークです。
-それでも98%の精度が出せるのでCNNの効率の良さがわかります。
+## Model
 
-- **学習データ**: MNIST 60,000枚
-- **テスト精度**: 98.04%（未知の10,000枚に対して）
-- **モデル構成**: Conv(5x5,8ch) → Pool → Conv(3x3,16ch) → Pool → FC(64) → FC(10)
+A real neural network with 27,690 parameters (1/65-millionth of GPT-4), yet achieves 98% accuracy — showing the efficiency of CNNs.
 
-## 技術構成
+- **Training data**: MNIST 60,000 images
+- **Test accuracy**: 98.04% (on 10,000 unseen images)
+- **Architecture**: Conv(5x5,8ch) → Pool → Conv(3x3,16ch) → Pool → FC(64) → FC(10)
 
-| 要素 | 技術 |
+## Tech Stack
+
+| Component | Technology |
 |---|---|
-| 学習 | Python / 純NumPy（PyTorch不使用） |
-| 推論 | Vanilla JavaScript（ブラウザ内で実行） |
-| 可視化 | SVG + Canvas + CSS |
-| 出力 | 単一HTMLファイル（外部依存なし、約620KB） |
+| Training | Python / pure NumPy (no PyTorch) |
+| Inference | Vanilla JavaScript (runs in browser) |
+| Visualization | SVG + Canvas + CSS |
+| Output | Single HTML file (no dependencies, ~620KB) |
 
-## 使い方
+## Usage
 
-### 生成済みHTMLを開く
+### Open the pre-built HTML
 
-`output/index.html` をブラウザで開くだけで動きます。
+Simply open `output/index.html` in your browser.
 
-### ソースから再生成する場合
+### Rebuild from source
 
 ```bash
 pip install numpy
 python main.py
 ```
 
-初回はMNISTデータのダウンロード + 学習（数分）が実行されます。
-2回目以降はキャッシュされた重みを使うため数秒で完了します。
+The first run downloads MNIST data and trains the model (takes a few minutes).
+Subsequent runs use cached weights and complete in seconds.
 
-生成されたHTMLは `output/index.html` に出力されます。
+The generated HTML is saved to `output/index.html`.
 
-## ファイル構成
+## File Structure
 
 ```
 digit_recognizer/
-├── main.py              # エントリポイント（学習→HTML生成）
-├── model.py             # CNN（forward + backward）純NumPy実装
-├── trainer.py           # SGDミニバッチ学習
-├── data.py              # MNISTダウンロード・読み込み
-├── visualizer_html.py   # HTML/CSS/JS生成
+├── main.py              # Entry point (train → generate HTML)
+├── model.py             # CNN (forward + backward) pure NumPy
+├── trainer.py           # SGD mini-batch training
+├── data.py              # MNIST download and loading
+├── visualizer_html.py   # HTML/CSS/JS generator
 └── output/
-    └── index.html       # 生成された単一HTMLアプリ
+    └── index.html       # Generated single-file HTML app
 ```
 
-## フィードバック
+## Feedback
 
-技術的な誤りや説明の改善点があれば、Issue や Pull Request を歓迎します。
+If you find technical errors or have suggestions for improvement, Issues and Pull Requests are welcome.
 
-## 作者
+## Author
 
 Tomohisa Iura ([@Tomoiura](https://github.com/Tomoiura)) — tomo@kanadeki.jp
 
-## ライセンス
+## License
 
-MIT License - 詳細は [LICENSE](LICENSE) を参照してください。
+MIT License - see [LICENSE](LICENSE) for details.

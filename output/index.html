@@ -33,6 +33,24 @@ header {
   text-align: center;
   padding: 28px 16px 20px;
 }
+#btn-lang {
+  padding: 6px 16px;
+  border: 2px solid var(--accent);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  vertical-align: middle;
+  margin-left: 12px;
+}
+#btn-lang:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 header h1 {
   font-size: 2rem;
   font-weight: 700;
@@ -260,11 +278,11 @@ main {
 <body>
 
 <header>
-  <h1>手書き数字認識 AI</h1>
-  <p class="subtitle">指またはマウスで数字を描くと、ニューラルネットワークがリアルタイムで認識します</p>
-  <p class="subtitle2">同時に、ネットワーク内部の信号の流れがリアルタイムに可視化されます</p>
-  <p class="model-info">学習済みモデル &#9432;
-    <span class="tooltip" id="model-tooltip">MNIST（手書き数字の画像7万枚のデータセット）のうち<br>6万枚で学習し、残り1万枚でテストした正解率: 98.0%<br>モデル構成: Conv(5x5,8ch) → Pool → Conv(3x3,16ch) → Pool → FC(64) → FC(10)<br><br>小さいながらも27,690パラメータ（GPT-4の6,500万分の1）を持つ<br>本物のニューラルネットワークです。<br>それでも98%の精度が出せるのでCNNの効率の良さがわかります。<br><button class="copy-btn" onclick="copyModelInfo(event)">コピー</button></span>
+  <h1><span id="t-title">手書き数字認識 AI</span> <button id="btn-lang" onclick="toggleLang()">EN</button></h1>
+  <p class="subtitle" id="t-subtitle">指またはマウスで数字を描くと、ニューラルネットワークがリアルタイムで認識します</p>
+  <p class="subtitle2" id="t-subtitle2">同時に、ネットワーク内部の信号の流れがリアルタイムに可視化されます</p>
+  <p class="model-info" id="t-model-label">学習済みモデル &#9432;
+    <span class="tooltip" id="model-tooltip"><span id="t-tooltip-body">MNIST（手書き数字の画像7万枚のデータセット）のうち<br>6万枚で学習し、残り1万枚でテストした正解率: 98.0%<br>モデル構成: Conv(5x5,8ch) → Pool → Conv(3x3,16ch) → Pool → FC(64) → FC(10)<br><br>小さいながらも27,690パラメータ（GPT-4の6,500万分の1）を持つ<br>本物のニューラルネットワークです。<br>それでも98%の精度が出せるのでCNNの効率の良さがわかります。</span><br><button class="copy-btn" onclick="copyModelInfo(event)" id="t-copy-btn">コピー</button></span>
   </p>
 </header>
 
@@ -295,14 +313,14 @@ main {
       </div>
       <div id="cnn-input-preview">
         <canvas id="vis-input" width="28" height="28"></canvas>
-        <span>CNNの入力 (28&times;28)</span>
+        <span id="t-cnn-input">CNNの入力 (28×28)</span>
       </div>
     </div>
   </section>
 
   <!-- Network diagram -->
   <section id="nn-diagram">
-    <h2>Network Diagram</h2>
+    <h2 id="t-nn-title">Network Diagram</h2>
     <svg id="nn-svg" viewBox="0 0 840 440" preserveAspectRatio="xMidYMid meet">
       <defs>
         <filter id="glow">
@@ -464,6 +482,57 @@ function infer(pixels28, weights) {
 
 
 // ===================== DRAWING + UI =====================
+
+// ===================== i18n =====================
+const LANG = {
+  ja: {
+    title: '手書き数字認識 AI',
+    subtitle: '指またはマウスで数字を描くと、ニューラルネットワークがリアルタイムで認識します',
+    subtitle2: '同時に、ネットワーク内部の信号の流れがリアルタイムに可視化されます',
+    modelLabel: '学習済みモデル \u2139',
+    tooltipBody: 'MNIST（手書き数字の画像7万枚のデータセット）のうち<br>6万枚で学習し、残り1万枚でテストした正解率: 98.0%<br>モデル構成: Conv(5x5,8ch) → Pool → Conv(3x3,16ch) → Pool → FC(64) → FC(10)<br><br>小さいながらも27,690パラメータ（GPT-4の6,500万分の1）を持つ<br>本物のニューラルネットワークです。<br>それでも98%の精度が出せるのでCNNの効率の良さがわかります。',
+    copyBtn: 'コピー',
+    copiedBtn: 'コピーしました',
+    cnnInput: 'CNNの入力 (28×28)',
+    nnTitle: 'Network Diagram',
+    toggleLabel: 'EN',
+  },
+  en: {
+    title: 'Handwritten Digit Recognition AI',
+    subtitle: 'Draw a digit with your finger or mouse — the neural network recognizes it in real time',
+    subtitle2: 'Watch the signal flow through the network layers in real time',
+    modelLabel: 'Trained Model \u2139',
+    tooltipBody: 'Trained on MNIST (70,000 handwritten digit images),<br>60,000 for training, 10,000 for testing — accuracy: 98.0%<br>Architecture: Conv(5x5,8ch) → Pool → Conv(3x3,16ch) → Pool → FC(64) → FC(10)<br><br>A real neural network with 27,690 parameters<br>(1/65-millionth of GPT-4), yet achieves 98% accuracy —<br>showing the efficiency of CNNs.',
+    copyBtn: 'Copy',
+    copiedBtn: 'Copied',
+    cnnInput: 'CNN Input (28×28)',
+    nnTitle: 'Network Diagram',
+    toggleLabel: '日本語',
+  }
+};
+
+let currentLang = (navigator.language || '').startsWith('ja') ? 'ja' : 'en';
+const params = new URLSearchParams(location.search);
+if (params.get('lang') === 'en') currentLang = 'en';
+if (params.get('lang') === 'ja') currentLang = 'ja';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = LANG[lang];
+  document.getElementById('t-title').textContent = t.title;
+  document.getElementById('t-subtitle').textContent = t.subtitle;
+  document.getElementById('t-subtitle2').textContent = t.subtitle2;
+  document.getElementById('t-model-label').firstChild.textContent = t.modelLabel + ' ';
+  document.getElementById('t-tooltip-body').innerHTML = t.tooltipBody;
+  document.getElementById('t-copy-btn').textContent = t.copyBtn;
+  document.getElementById('t-cnn-input').textContent = t.cnnInput;
+  document.getElementById('t-nn-title').textContent = t.nnTitle;
+  document.getElementById('btn-lang').textContent = t.toggleLabel;
+}
+
+function toggleLang() {
+  setLang(currentLang === 'ja' ? 'en' : 'ja');
+}
 
 // ===================== INIT =====================
 const weights = loadWeights(W);
@@ -959,6 +1028,7 @@ function copyModelInfo(e) {
 }
 
 // ===================== INITIAL STATE =====================
+setLang(currentLang);
 updateDial(new Float32Array(10).fill(0.1));
 
 </script>
