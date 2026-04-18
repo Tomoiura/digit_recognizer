@@ -75,6 +75,12 @@ def build_html(weights: dict, history: dict, test_acc: float) -> str:
     </svg>
   </section>
 
+  <footer id="site-footer">
+    <a href="https://github.com/Tomoiura/digit_recognizer" target="_blank" rel="noopener">GitHub</a>
+    <span class="sep">·</span>
+    <a id="t-article-link" href="https://qiita.com/Tomoiura/items/4ea6f5bb605c62eaf4cb" target="_blank" rel="noopener">解説記事 (Qiita)</a>
+  </footer>
+
 </main>
 
 <script>
@@ -312,6 +318,26 @@ main {
 }
 
 /* ---- Network Diagram ---- */
+#site-footer {
+  text-align: center;
+  padding: 24px 16px 12px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+#site-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--accent);
+  padding-bottom: 1px;
+}
+#site-footer a:hover {
+  opacity: 0.8;
+}
+#site-footer .sep {
+  margin: 0 12px;
+  opacity: 0.5;
+}
+
 #nn-diagram {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -520,6 +546,8 @@ const LANG = {
     cnnInput: 'CNNの入力 (28×28)',
     nnTitle: 'Network Diagram',
     toggleLabel: 'EN',
+    articleText: '解説記事 (Qiita)',
+    articleUrl: 'https://qiita.com/Tomoiura/items/4ea6f5bb605c62eaf4cb',
   },
   en: {
     title: 'Handwritten Digit Recognition AI',
@@ -532,6 +560,8 @@ const LANG = {
     cnnInput: 'CNN Input (28×28)',
     nnTitle: 'Network Diagram',
     toggleLabel: '日本語',
+    articleText: 'Read the article (Dev.to)',
+    articleUrl: 'https://dev.to/tomoiura/draw-a-digit-and-watch-the-neural-network-think-in-real-time-3oe8',
   }
 };
 
@@ -552,6 +582,9 @@ function setLang(lang) {
   document.getElementById('t-cnn-input').textContent = t.cnnInput;
   document.getElementById('t-nn-title').textContent = t.nnTitle;
   document.getElementById('btn-lang').textContent = t.toggleLabel;
+  const articleLink = document.getElementById('t-article-link');
+  articleLink.textContent = t.articleText;
+  articleLink.href = t.articleUrl;
 }
 
 function toggleLang() {
